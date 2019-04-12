@@ -47,3 +47,45 @@
 (define (check x) (and (> x 5) (< x 10)))
 (check 8)
 (check 12)
+
+;; Newtons approximation for square root
+(define (sqrt-iter guess x)
+  (if (good-enough? guess x)
+      guess
+      (sqrt-iter (improve guess x)
+                 x)))
+
+(define (improve guess x)
+  (average guess (/ x guess)))
+
+(define (average x y)
+  (/ (+ x y) 2))
+
+(define (good-enough? guess x)
+  (< (abs (- (* guess guess) x)) 0.0001))
+
+(define (square-root x)
+  (sqrt-iter 1.0 x))
+
+(square-root 9)
+(square-root 10000)
+
+;; local isolated procedures
+(define (sqrt x)
+  ;; x is already in scope of thes inner functions,
+  ;; so we don't need to pass it anymore!
+  (define (sqrt-iter guess)
+    (if (good-enough? guess)
+        guess
+        (sqrt-iter (improve guess))))
+  (define (good-enough? guess)
+    (< (abs (- (* guess guess) x)) 0.0001))
+  (define (improve guess)
+    (average guess (/ x guess)))
+  (define (average x y)
+    (/ (+ x y) 2))
+  (sqrt-iter 1.0))
+
+(sqrt 9)
+(sqrt 10000)
+(sqrt 1000000)
